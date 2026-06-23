@@ -1,0 +1,20 @@
+{
+  "name": "skymp-bounty-system",
+  "version": "1.0.0",
+  "description": "Player Crime & Bounty Hunting Framework for SKYMP (player-only server)",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --watch",
+    "zip": "npm run build && bestzip --source Platform --destination ../skymp-bounty-system-1.0.0.zip"
+  },
+  "dependencies": {
+    "@skymp/skyrim-platform": "^1.0.0"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "bestzip": "^2.2.1"
+  }
+}

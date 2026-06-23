@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bounty Board</title>
+    <style>
+        body {
+            background: rgba(20, 20, 30, 0.95);
+            color: #ffd700;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 { text-align: center; text-shadow: 2px 2px 4px #000; }
+        .bounty { 
+            background: rgba(0,0,0,0.6); 
+            margin: 10px 0; 
+            padding: 15px; 
+            border: 1px solid #ffd700; 
+        }
+        button {
+            background: #8b0000;
+            color: gold;
+            border: 1px solid gold;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        button:hover { background: #b30000; }
+    </style>
+</head>
+<body>
+    <h1>🌟 BOUNTY BOARD 🌟</h1>
+    
+    <div id="activeBounties"></div>
+    
+    <h2>Place New Bounty</h2>
+    <select id="targetSelect" style="width:100%; padding:8px; margin-bottom:10px;"></select>
+    <input id="amount" type="number" placeholder="Bounty Amount (min 100)" style="width:100%; padding:8px; margin-bottom:10px;" />
+    <input id="reason" placeholder="Reason for bounty (e.g. murder, theft)" style="width:100%; padding:8px; margin-bottom:10px;" />
+    <button onclick="placeNewBounty()" style="width:100%;">PLACE BOUNTY</button>
+
+    <script>
+        let onlinePlayers = [];
+
+        function refreshBounties() {
+            window.skymp.callServer("getBounties", {}, (bounties) => {
+                const container = document.getElementById("activeBounties");
+                container.innerHTML = "<h3>Active Bounties</h3>";
+                
+                bounties.forEach(b => {
+                    const div = document.createElement("div");
+                    div.className = "bounty";
+                    div.innerHTML = `
+                        <strong>Target:</strong> Player ${b.targetId}<br>
+                        <strong>Amount:</strong> ${b.amount} gold<br>
+                        <strong>Reason:</strong> ${b.reason}<br>
+                        ${b.claimedBy ? '<span style="color:red">CLAIMED</span>' : '<button onclick="claimThis(\'' + b.id + '\')">Claim Bounty</button>'}
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        function placeNewBounty() {
+            const targetId = parseInt(document.getElementById("targetSelect").value);
+            const amount = parseInt(document.getElementById("amount").value);
+            const reason = document.getElementById("reason").value;
+            
+            if (!targetId || amount < 100 || !reason) {
+                alert("Invalid bounty details!");
+                return;
+            }
+            
+            window.skymp.call("placeBounty", {targetId, amount, reason});
+        }
+
+        function claimThis(bountyId) {
+            window.skymp.call("claimBounty", {bountyId});
+        }
+
+        // Populate online players (server provides via skymp API)
+        window.addEventListener("load", () => {
+            window.skymp.callServer("getOnlinePlayers", {}, (players) => {
+                onlinePlayers = players;
+                const select = document.getElementById("targetSelect");
+                players.forEach(p => {
+                    const opt = document.createElement("option");
+                    opt.value = p.id;
+                    opt.text = `Player ${p.id}`;
+                    select.appendChild(opt);
+                });
+                refreshBounties();
+            });
+        });
+
+        // Refresh every 30 seconds
+        setInterval(refreshBounties, 30000);
+    </script>
+</body>
+</html>
