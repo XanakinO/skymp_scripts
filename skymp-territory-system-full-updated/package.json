@@ -1,0 +1,18 @@
+{
+  "name": "skymp-territory-system",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "webpack --watch",
+    "build": "webpack",
+    "zip": "npm run build && bestzip --source Platform --destination skymp-territory-system.zip"
+  },
+  "dependencies": {
+    "@skymp/skyrim-platform": "latest"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
+  }
+}

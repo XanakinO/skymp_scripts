@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { 
+      background: rgba(0,0,0,0.85); 
+      color: #ffcc00; 
+      font-family: 'Skyrim', sans-serif; 
+      padding: 20px;
+    }
+    h1 { text-align: center; }
+    button { padding: 10px; margin: 5px; background: #330000; color: gold; border: 1px solid gold; }
+  </style>
+</head>
+<body>
+  <h1>Territory Control</h1>
+  <div id="status">Loading territories...</div>
+  <button onclick="claimCurrent()">Claim Current Area</button>
+  <button onclick="viewGuildTerritories()">My Guild Territories</button>
+
+  <script>
+    function claimCurrent() {
+      window.skymp.call("attemptClaimTerritory", {});
+    }
+
+    function viewGuildTerritories() {
+      // Fetch from server
+      alert("Guild territories would load here (integrated with faction system)");
+    }
+
+    // Listen for server sync
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'territoryUpdate') {
+        document.getElementById('status').innerHTML = `Controlled by: ${event.data.owner}`;
+      }
+    });
+  </script>
+</body>
+</html>
