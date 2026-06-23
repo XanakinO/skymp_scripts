@@ -1,6 +1,6 @@
 {
   "name": "Skyrim Scribes",
-  "author": "Grok Assisted",
+  "author": "xanakin",
   "version": "1.0.0",
   "loadOrder": 100,
   "files": ["dist/index.js"]
