@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scribe's Journal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=UnifrakturCook:wght@700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1208 url('https://i.imgur.com/5zZfK8J.jpg') center/cover; /* dark leather */
+            color: #e8d5a3;
+            font-family: 'Cinzel', serif;
+            overflow: hidden;
+            image-rendering: crisp-edges;
+        }
+
+        .leather-frame {
+            border: 28px solid transparent;
+            border-image: linear-gradient(#3c2f1e, #8c5f2e, #3c2f1e) 1;
+            box-shadow: 
+                0 0 40px rgba(139, 69, 19, 0.9),
+                inset 0 0 60px rgba(0,0,0,0.95),
+                0 0 80px rgba(218, 165, 32, 0.25);
+            background: #2c2118;
+            margin: 20px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            font-family: 'UnifrakturCook', cursive;
+            font-size: 42px;
+            color: #ffd700;
+            text-shadow: 3px 3px 8px #000, 0 0 15px #b8860b;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+        }
+
+        .quill-container {
+            background: #f5e8c7 url('https://i.imgur.com/7vXzK9P.jpg') repeat; /* parchment */
+            border: 12px solid #3c2f1e;
+            box-shadow: inset 0 0 35px rgba(0,0,0,0.7);
+            padding: 35px;
+            min-height: 460px;
+            position: relative;
+        }
+
+        #quill-editor {
+            height: 420px;
+            background: transparent;
+            color: #2c2118;
+            font-size: 18px;
+            line-height: 1.65;
+        }
+
+        .toolbar {
+            background: #1f160f;
+            border: 6px solid #5c4033;
+            padding: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+        }
+
+        button {
+            background: #3c2f1e;
+            color: #e8d5a3;
+            border: 2px solid #b8860b;
+            padding: 8px 14px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #5c4033;
+            box-shadow: 0 0 12px #ffd700;
+        }
+
+        .preview {
+            background: #f5e8c7 url('https://i.imgur.com/7vXzK9P.jpg');
+            border: 18px ridge #3c2f1e;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+            font-size: 17px;
+            line-height: 1.8;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .candle {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-size: 42px;
+            animation: flicker 1.8s infinite alternate ease-in-out;
+            filter: drop-shadow(0 0 25px #ffcc66);
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.85; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.04); }
+            100% { opacity: 0.9; transform: scale(0.98); }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css">
+</head>
+<body>
+    <div class="leather-frame">
+        <div class="candle">🕯️</div>
+        <div class="header">✦ THE SCRIBE'S ARCHIVES ✦</div>
+
+        <div class="toolbar">
+            <!-- Rich formatting buttons here (Quill toolbar will be injected) -->
+        </div>
+
+        <div class="quill-container">
+            <div id="quill-editor"></div>
+        </div>
+
+        <div style="margin-top:15px; text-align:center;">
+            <button onclick="saveBook()">🪶  Seal & Save to the Aether</button>
+            <button onclick="saveDraft()">💾  Save Draft</button>
+            <button onclick="showHistory()">📜  View History</button>
+            <button onclick="openLibraryFromEditor()">📖  Grand Library</button>
+            <button onclick="closeEditor()">✕  Close Tome</button>
+        </div>
+
+        <div class="preview" id="preview">
+            <strong>Preview — As it shall appear in the Eternal Tomes</strong><br><br>
+            <span id="preview-content">Your words shall echo through the ages...</span>
+        </div>
+    </div>
+
+    <script>
+        let quill;
+        let currentBookId = "book_" + Date.now();
+
+        function initQuill() {
+            quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        ['bold', 'italic', 'underline'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                }
+            });
+
+            quill.on('text-change', updatePreview);
+        }
+
+        function updatePreview() {
+            const html = quill.root.innerHTML;
+            document.getElementById('preview-content').innerHTML = html;
+        }
+
+        function saveBook() {
+            const data = {
+                title: "Player Journal Entry",
+                content: quill.root.innerHTML,
+                bookId: currentBookId
+            };
+            window.skyrimPlatform.sendMessage("saveScribesBook", data);
+        }
+
+        function saveDraft() {
+            localStorage.setItem(currentBookId, JSON.stringify({
+                content: quill.root.innerHTML,
+                timestamp: Date.now()
+            }));
+            alert("Draft sealed in your personal satchel.");
+        }
+
+        function showHistory() {
+            alert("Version history would appear here (localStorage driven).");
+        }
+
+        function openLibraryFromEditor() {
+            window.skyrimPlatform.sendMessage("openLibrary", {});
+        }
+
+        function closeEditor() {
+            window.skyrimPlatform.sendMessage("closeBrowser", {});
+        }
+
+        window.onload = initQuill;
+    </script>
+</body>
+</html>
