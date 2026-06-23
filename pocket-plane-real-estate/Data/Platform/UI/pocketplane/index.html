@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { 
+            background: linear-gradient(rgba(20,0,50,0.95), rgba(5,0,25,0.95)); 
+            color: #ddbbff; 
+            font-family: Papyrus, serif; 
+            text-align: center; 
+            padding: 20px; 
+            margin: 0;
+        }
+        h1 { text-shadow: 0 0 10px #bb99ff; }
+        button { 
+            margin: 6px; padding: 12px 20px; 
+            background: #220033; color: #ffddaa; 
+            border: 3px solid #bb99ff; font-size: 15px; 
+            cursor: pointer;
+        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <h1>✧ POCKET PLANE REAL ESTATE ✧</h1>
+    <p id="status">Daedric Realm Editor</p>
+
+    <div class="grid">
+        <button onclick="place('Throne')">Daedric Throne</button>
+        <button onclick="place('Bookshelf')">Soul Bookshelf</button>
+        <button onclick="place('AlchemyLab')">Alchemy Lab</button>
+        <button onclick="place('Bed')">Void Bed</button>
+        <button onclick="place('DisplayCase')">Artifact Case</button>
+    </div>
+
+    <h2>Transform Selected</h2>
+    <div class="grid">
+        <button onclick="move('x', 60)">X +</button>
+        <button onclick="move('x', -60)">X -</button>
+        <button onclick="move('y', 60)">Y +</button>
+        <button onclick="move('y', -60)">Y -</button>
+        <button onclick="move('z', 40)">Z ↑</button>
+        <button onclick="move('z', -40)">Z ↓</button>
+    </div>
+
+    <div class="grid">
+        <button onclick="rotate('z', 45)">Z +45°</button>
+        <button onclick="rotate('z', -45)">Z -45°</button>
+        <button onclick="toggleCollision()">Toggle Ghost/Glow</button>
+        <button onclick="deleteItem()" style="background:#660000;color:#ffaaaa;">DELETE</button>
+    </div>
+
+    <button onclick="exitPlane()">Exit to Tamriel</button>
+
+    <script>
+        function place(item) {
+            const offset = {x: Math.random()*200-100, y: Math.random()*200-100, z: 0};
+            window.skyrimPlatform.sendMessage('placeFurniture', item, offset);
+        }
+        function move(axis, amount) { window.skyrimPlatform.sendMessage('move', axis, amount); }
+        function rotate(axis, degrees) { window.skyrimPlatform.sendMessage('rotate', axis, degrees); }
+        function toggleCollision() { window.skyrimPlatform.sendMessage('toggleCollision'); }
+        function deleteItem() {
+            if (confirm("Delete selected furniture permanently?")) {
+                window.skyrimPlatform.sendMessage('delete');
+            }
+        }
+        function exitPlane() { window.skyrimPlatform.sendMessage('exit'); }
+        function enterPlane(id) {
+            document.getElementById('status').innerText = `Realm: ${id}`;
+        }
+    </script>
+</body>
+</html>

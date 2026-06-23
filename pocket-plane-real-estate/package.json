@@ -1,0 +1,11 @@
+{
+  "name": "pocket-plane-real-estate",
+  "version": "1.0.0",
+  "description": "SkyMP Pocket Plane Real Estate Plugin",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "dependencies": {}
+}
