@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Afterlife Realm</title>
+  <style>
+    body { background: rgba(20,20,40,0.95); color: #a0d0ff; font-family: 'Skyrim'; text-align: center; }
+    button { margin: 10px; padding: 15px; background: #334466; color: gold; border: 2px solid #6688aa; }
+    .haunt { color: #ff6666; }
+  </style>
+</head>
+<body>
+  <h1>You are a Ghost in the Afterlife...</h1>
+  <p>Haunt the living, form pacts, or seek revival.</p>
+  
+  <div id="ghosts"></div>
+  
+  <button onclick="startHaunting()">Haunt a Living Player</button>
+  <button onclick="makePact()">Make Ghost Pact</button>
+  <button onclick="requestRevival()">Request Revival Ritual</button>
+
+  <script>
+    function startHaunting() {
+      const targetId = prompt("Enter player ID to haunt:");
+      window.skymp.call("startHaunting", {targetId});
+    }
+    
+    function makePact() {
+      const otherId = prompt("Enter other ghost ID:");
+      window.skymp.call("makeGhostPact", {otherId, pactType: "alliance"});
+    }
+    
+    function requestRevival() {
+      window.skymp.call("requestRevival");
+    }
+    
+    window.addEventListener('message', (event) => {
+      if (event.data.ghosts) {
+        document.getElementById('ghosts').innerHTML = event.data.ghosts.map(g => `<p>Ghost: ${g.name} ${g.soulGemBound ? '(Soul Gem Trapped)' : ''}</p>`).join('');
+      }
+    });
+  </script>
+</body>
+</html>
