@@ -20,5 +20,3 @@ Press **F9** in-game to open the Arcane Forge UI.
 
 **New: Ritual Ceremonies** – Gather participants for group rituals to create legendary artifacts with enhanced power.
 
-## Integration
-Works great with Territory, Bounty, and Death/Afterlife systems.
