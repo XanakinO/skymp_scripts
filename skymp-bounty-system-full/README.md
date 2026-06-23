@@ -18,4 +18,4 @@ Fully player-driven bounty and crime system for **no-NPC** SKYMP servers.
 
 Press **F10** in-game to open the Bounty Board.
 
-Made for portfolio use - clean, modular, and extensible.
+
