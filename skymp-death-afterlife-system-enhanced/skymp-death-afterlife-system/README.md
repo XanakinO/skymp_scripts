@@ -21,4 +21,3 @@ Full immersive death and afterlife mechanics for player-only RP servers.
 
 Press **F12** in afterlife. Use haunting and soul gems for deep RP!
 
-Great for combining with Bounty and Territory systems.
