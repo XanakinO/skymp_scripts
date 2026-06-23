@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arcane Forge - Artifact Crafting</title>
+  <style>
+    body { background: rgba(20, 20, 40, 0.95); color: #a0d8ff; font-family: "Skyrim"; padding: 20px; }
+    h1 { color: gold; }
+    button { background: #331a00; color: gold; padding: 10px; margin: 5px; border: 2px solid #664400; }
+  </style>
+</head>
+<body>
+  <h1>Custom Artifact Crafting</h1>
+  <div id="inventory">Loading available items...</div>
+  
+  <select id="baseItem">
+    <!-- Populated via JS -->
+  </select>
+  
+  <select id="soulGem">
+    <!-- Populated via JS -->
+  </select>
+  
+  <input id="effect" placeholder="Custom Effect (e.g. Fire Damage, Speed Boost)" />
+  
+  <button onclick="craft()">Forge Artifact</button>
+  <button onclick="startRitual()">Begin Ritual Ceremony (needs participants)</button>
+
+  <script>
+    function craft() {
+      const base = document.getElementById('baseItem').value;
+      const soul = document.getElementById('soulGem').value;
+      const effect = document.getElementById('effect').value;
+      
+      window.skymp.call("craftArtifact", {
+        baseItemId: parseInt(base),
+        soulGemId: parseInt(soul),
+        effectId: effect,
+        isRitual: false
+      });
+    }
+
+    function startRitual() {
+      const base = document.getElementById('baseItem').value;
+      const soul = document.getElementById('soulGem').value;
+      const effect = document.getElementById('effect').value;
+      
+      window.skymp.call("startRitual", {
+        baseItemId: parseInt(base),
+        soulGemId: parseInt(soul),
+        effect: effect
+      });
+    }
+    
+    // In real use, fetch player inventory from server
+    console.log("Enchanting UI Ready - Ritual support added");
+  </script>
+</body>
+</html>
