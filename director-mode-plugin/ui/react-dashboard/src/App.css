@@ -1,10 +1,11 @@
 .director-dashboard {
   font-family: 'Cinzel', serif;
-  background: linear-gradient(rgba(20,20,30,0.95), rgba(20,20,30,0.95)), url('https://i.imgur.com/skyrim-castle-bg.jpg') center/cover fixed;
-  color: #d4af37;
+  background: linear-gradient(rgba(15,12,10,0.92), rgba(15,12,10,0.92)), url('https://i.imgur.com/skyrim-castle-bg.jpg') center/cover fixed;
+  color: #e0d4b3;
   height: 100vh;
   overflow: hidden;
   margin: 0;
+  padding: 0;
 }
 
 .header {
@@ -52,11 +53,17 @@
 }
 
 .panel {
-  background: rgba(40, 35, 30, 0.95);
+  background: rgba(35, 28, 22, 0.96);
   border: 2px solid #8b5a2b;
-  margin-bottom: 20px;
-  padding: 20px;
-  border-radius: 4px;
+  margin-bottom: 16px;
+  padding: 18px;
+  border-radius: 3px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+.active-event {
+  border-color: #4a7043;
+  background: rgba(40, 45, 35, 0.95);
 }
 
 .active-event {
@@ -79,8 +86,75 @@
 .log-list {
   list-style: none;
   padding: 0;
-  max-height: 300px;
+  max-height: 220px;
   overflow-y: auto;
+}
+
+.recent-events .event-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #3a2c1f;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recent-events .time {
+  margin-left: auto;
+  color: #a38d5f;
+  font-size: 0.9em;
+}
+
+.recent-events .status {
+  font-size: 0.85em;
+  padding: 1px 8px;
+  border-radius: 3px;
+}
+
+.recent-events .status.active {
+  color: #4a7043;
+  font-weight: bold;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.stat-value {
+  font-size: 1.35em;
+  color: #ffd700;
+  font-weight: bold;
+  float: right;
+}
+
+.event-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 0.95em;
+  color: #c8b38a;
+}
+
+.event-buttons button {
+  padding: 9px 18px;
+  font-size: 0.95em;
+  margin-right: 8px;
+}
+
+.red-btn {
+  background: #8b0000 !important;
+  border-color: #ff4444;
+}
+
+.side-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 320px;
+  padding-left: 15px;
 }
 
 button {

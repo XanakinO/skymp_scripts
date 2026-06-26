@@ -77,19 +77,63 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content - Matching Screenshot Layout */}
         <div className="main-content">
-          {/* Active Event */}
-          <div className="panel active-event">
-            <h2>ACTIVE EVENT</h2>
-            {activeEvent ? (
-              <div>
-                <h3>{activeEvent.name}</h3>
-                <p>Location: {activeEvent.location}</p>
-                <p>Participants: {activeEvent.participants}</p>
-                <button onClick={() => {/* end event logic */}}>END EVENT</button>
-                <button>PAUSE EVENT</button>
+          {/* ACTIVE EVENT - Top Center - Exact match to image */}
+          <div className="panel active-event" style={{marginBottom: '15px'}}>
+            <div className="active-event-header">
+              <h2>ACTIVE EVENT</h2>
+              <span className="active-badge">ACTIVE</span>
+            </div>
+            <div className="event-details">
+              <img src="https://i.imgur.com/7kL9v3D.jpg" alt="Dragon Attack" className="event-image" style={{width:'100%', height:'180px', objectFit:'cover', borderRadius:'4px'}} />
+              <h3>DRAGON ATTACK: RIVERWOOD</h3>
+              <p>A dragon has been summoned to attack Riverwood.</p>
+              <div className="event-meta">
+                <div>EVENT TYPE: Dynamic</div>
+                <div>STARTED: 7:30 PM</div>
+                <div>ELAPSED: 12m 34s</div>
+                <div>PARTICIPANTS: 18</div>
+                <div>STATE: In Progress</div>
+              </div>
+              <div className="event-buttons">
+                <button className="red-btn" onClick={() => endEvent()}>END EVENT</button>
+                <button onClick={() => pauseEvent()}>PAUSE EVENT</button>
                 <button>EDIT EVENT</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Event Overview Stats Panel - Right Side */}
+          <div className="side-panels">
+            <div className="panel event-overview">
+              <h3>EVENT OVERVIEW</h3>
+              <div className="stats-grid">
+                <div>ACTIVE EVENTS <span className="stat-value">1</span></div>
+                <div>SCHEDULED <span className="stat-value">2</span></div>
+                <div>COMPLETED TODAY <span className="stat-value">4</span></div>
+                <div>TOTAL PLAYERS IMPACTED <span className="stat-value">56</span></div>
+              </div>
+            </div>
+
+            {/* Recent Events - Exact from image */}
+            <div className="panel recent-events">
+              <h3>RECENT EVENTS</h3>
+              <div className="event-item">
+                <span>🐉</span> Dragon Attack: Riverwood <span className="time">7:30 PM</span> <span className="status active">• Active</span>
+              </div>
+              <div className="event-item">
+                <span>🏴‍☠️</span> Bandit Raid: Whiterun <span className="time">6:15 PM</span> <span className="status">• Completed</span>
+              </div>
+              <div className="event-item">
+                <span>🔮</span> Mages Guild Summons <span className="time">4:45 PM</span> <span className="status">• Completed</span>
+              </div>
+              <div className="event-item">
+                <span>🧛</span> Vampire Invasion <span className="time">2:30 PM</span> <span className="status">• Completed</span>
+              </div>
+              <button>VIEW ALL EVENTS</button>
+            </div>
+          </div>
               </div>
             ) : (
               <button onClick={() => startEvent('dragonAttack', 'Riverwood')} className="big-btn">
@@ -187,6 +231,25 @@ const Dashboard: React.FC = () => {
             <button onClick={() => sendToSkymp('sendAnnouncement', 'Server-wide message')}>SEND ANNOUNCEMENT</button>
             <button onClick={() => setShowSpawnModal(true)}>SPAWN NPC</button>
           </div>
+          <div className="panel">
+            <h3>RECENT EVENTS</h3>
+            <div className="recent-events">
+              <div className="event-item">
+                <span>🐉</span> Dragon Attack: Riverwood <span className="time">7:30 PM</span> <span className="status active">• Active</span>
+              </div>
+              <div className="event-item">
+                <span>🏴‍☠️</span> Bandit Raid: Whiterun <span className="time">6:15 PM</span> <span className="status">• Completed</span>
+              </div>
+              <div className="event-item">
+                <span>🧙</span> Mages Guild Summons <span className="time">4:45 PM</span> <span className="status">• Completed</span>
+              </div>
+              <div className="event-item">
+                <span>🧛</span> Vampire Invasion <span className="time">2:30 PM</span> <span className="status">• Completed</span>
+              </div>
+            </div>
+            <button style={{marginTop: '12px'}}>VIEW ALL EVENTS</button>
+          </div>
+
           <div className="panel">
             <h3>EVENT LOG</h3>
             <ul className="log-list">
