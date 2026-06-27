@@ -44,3 +44,5 @@ Hotkey: Insert to toggle.
 - Add visual polish to React UI (icons, animations via CSS/Framer Motion).
 
 See `src/papyrus-integration.ts` for deeper game integration.
+
+testing phase 8/15
