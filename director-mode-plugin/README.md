@@ -3,7 +3,7 @@
 This is a starter kit for the GM Dashboard shown in the image.
 
 ## Features
-- Full React + Redux dashboard 
+- Full React + Redux dashboard closely matching the original screenshot
 - NPC & AI Control panel (AI packages, aggression)
 - Quest Editor (start/advance/complete quests, objectives)
 - Enhanced Spawn Menu modal with categories
@@ -44,5 +44,3 @@ Hotkey: Insert to toggle.
 - Add visual polish to React UI (icons, animations via CSS/Framer Motion).
 
 See `src/papyrus-integration.ts` for deeper game integration.
-
-testing phase 8/15
