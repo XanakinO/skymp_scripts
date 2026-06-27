@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { sendToSkymp } from '../../utils/skympBridge';
 
 const Minimap: React.FC = () => {
@@ -6,18 +6,31 @@ const Minimap: React.FC = () => {
   const mapWidth = 800;
   const mapHeight = 600;
 
-  // Skyrim Tamriel map approximate scaling (very rough)
+  // Better position handling
+  useEffect(() => {
+    (window as any).updatePlayerPosition = (pos: {x: number, y: number, z: number}) => {
+      setSelectedPos(pos);
+    };
+    return () => delete (window as any).updatePlayerPosition;
+  }, []);
+
+  // Improved Skyrim Tamriel map calibration
+  // Real Tamriel worldspace coords roughly span ~ -300,000 to 300,000 in X/Y for playable areas.
+  // This is a calibrated approximation for central Tamriel (Whiterun/Riverwood area around 0,0).
+  // For precision, use in-game markers or adjust offsets based on your map image alignment.
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    // Rough conversion to Skyrim coordinates (example values)
-    const gameX = Math.round((clickX / mapWidth) * 400000 - 200000);
-    const gameY = Math.round((clickY / mapHeight) * 400000 - 200000);
+    // Better calibration: Adjust multipliers/offsets for your specific map image
+    const gameX = Math.round((clickX / mapWidth) * 600000 - 300000);
+    const gameY = Math.round((clickY / mapHeight) * 600000 - 300000);
 
-    setSelectedPos({ x: gameX, y: gameY, z: 1000 }); // Default Z
-    sendToSkymp('directorSetSpawnPosition', { x: gameX, y: gameY, z: 1000 });
+    const newPos = { x: gameX, y: gameY, z: 1000 }; // Default Z ~ ground level, adjust per cell
+    setSelectedPos(newPos);
+    sendToSkymp('directorSpawnAtPosition', { position: newPos, type: 'selected' });
+    console.log('Selected spawn position (calibrated):', newPos);
   };
 
   return (

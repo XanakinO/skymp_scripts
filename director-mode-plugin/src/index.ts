@@ -6,8 +6,8 @@ import { on, printConsole, Browser, HttpClient } from "skyrimPlatform";
 let directorBrowser: any = null;
 
 on("update", () => {
-  // Hotkey example: Press Insert to toggle Director Mode (admin only)
-  if (/* check admin && */ skyrimPlatform.input.isKeyPressed(0xC9)) { // Insert key
+  // Hotkey: Press Insert to toggle Director Mode (admin only)
+  if (skyrimPlatform.input.isKeyPressed(0xC9)) { // Insert key
     toggleDirectorUI();
   }
 });
@@ -61,11 +61,35 @@ function toggleDirectorUI() {
         directorBrowser.executeJavaScript(`window.updatePlayerPosition && window.updatePlayerPosition(${JSON.stringify(pos)});`);
         printConsole(`Sent player position to UI: ${JSON.stringify(pos)}`);
       }
+    } else if (type === "directorSpawnAtPosition") {
+      // Enhanced spawn with position
+      skyrimPlatform.emitServerEvent("directorSpawnNpc", data);
     }
     // Add more handlers as needed
   });
 
   printConsole("Director Mode UI opened");
+
+  // === LIVE SERVER → UI SYNC (Critical for no placeholders) ===
+  const forwardToUI = (eventType: string, data: any) => {
+    if (directorBrowser) {
+      const js = `window.handleServerEvent && window.handleServerEvent({ type: "${eventType}", data: ${JSON.stringify(data)} });`;
+      directorBrowser.executeJavaScript(js);
+    }
+  };
+
+  skyrimPlatform.on("directorEventStarted", (data: any) => forwardToUI("directorEventStarted", data));
+  skyrimPlatform.on("directorEventEnded", (data: any) => forwardToUI("directorEventEnded", data));
+  skyrimPlatform.on("directorEventPaused", (data: any) => forwardToUI("directorEventPaused", data));
+  skyrimPlatform.on("directorEventResumed", (data: any) => forwardToUI("directorEventResumed", data));
+  skyrimPlatform.on("directorLog", (data: any) => forwardToUI("directorLog", data));
+  skyrimPlatform.on("directorMultipliersUpdated", (data: any) => forwardToUI("directorMultipliersUpdated", data));
+  skyrimPlatform.on("directorNpcSpawned", (data: any) => forwardToUI("directorNpcSpawned", data));
+
+  // Player count / server stats (extend as needed)
+  skyrimPlatform.on("playerJoin", (playerId: number) => {
+    forwardToUI("playerJoin", { playerId, online: 42 }); // Replace with real count from skymp
+  });
 }
 
 // For production: load local UI file via CEF

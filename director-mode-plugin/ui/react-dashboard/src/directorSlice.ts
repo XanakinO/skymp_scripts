@@ -41,9 +41,12 @@ const directorSlice = createSlice({
     setSpawnSearch: (state, action: PayloadAction<string>) => {
       state.spawnSearch = action.payload;
     },
+    setEvents: (state, action: PayloadAction<any[]>) => {
+      state.events = action.payload;
+    },
     // Add more actions as needed
   },
 });
 
-export const { setActiveEvent, addLog, updateMultipliers, setSpawnSearch } = directorSlice.actions;
+export const { setActiveEvent, addLog, updateMultipliers, setSpawnSearch, setEvents } = directorSlice.actions;
 export default directorSlice.reducer;
