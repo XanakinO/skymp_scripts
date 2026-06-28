@@ -1,46 +1,51 @@
-# Director Mode for SkyMP / SkyrimPlatform
+Director Mode for SkyMP Director Mode is a powerful, real-time Game Master (GM) management tool for SkyMP multiplayer servers. It provides admins with a comprehensive in-game dashboard for controlling events, spawning, world state, players, and more. Full Code Structure Root Files
 
-This is a starter kit for the GM Dashboard shown in the image.
+package.json — Build scripts and dependencies. tsconfig.json — TypeScript configuration. director-config.json — Server-wide settings (admins, limits, features). form-database.json — Extensive FormID database for spawning.
 
-## Features
-- Full React + Redux dashboard closely matching the original screenshot
-- NPC & AI Control panel (AI packages, aggression)
-- Quest Editor (start/advance/complete quests, objectives)
-- Enhanced Spawn Menu modal with categories
-- Multipliers sliders with Redux sync
-- CEF live-reload dev setup (npm start + localhost)
-- Extended server hooks and Papyrus integration points
+Client Layer (src/index.ts)
 
-## React Dashboard Setup (Recommended)
+Registers the Insert hotkey to toggle the dashboard. Creates and manages the CEF Browser window. Handles all communication between the React UI and the SkyMP server. Supports both development (localhost) and production (local file) modes.
 
-1. Navigate to `ui/react-dashboard`
-2. Install dependencies (if you have Node.js locally): `npm install`
-3. Build: `npm run build`
-4. Copy the `build/` folder contents to your Skyrim `Data/Platform/UI/director/` or serve via localhost for dev.
+Server Layer (src/server-hooks.ts)
 
-## CEF Live-Reload Dev Setup (Recommended)
-1. In `ui/react-dashboard`: `npm start` (runs on http://localhost:3000)
-2. In `src/index.ts`: Browser loads `http://localhost:3000`
-3. Changes in React auto-reload in-game (CEF supports it well).
-4. For production build: `npm run build`, copy `build/` to `Data/Platform/UI/director/`, update Browser path to local file URL.
+DirectorServer class manages all state (events, players, multipliers, logs). Registers event listeners for GM commands. Performs admin validation, rate limiting, and persistence. Broadcasts live updates to all connected clients. Bridges to Papyrus for actual game world changes.
 
-Hotkey: Insert to toggle.
+Papyrus Layer (papyrus/)
 
-## Server-Side Integration (Updated)
-1. Copy `src/server-hooks.ts` into your SkyMP server scripts.
-2. **Admin Auth**: Edit `isAdmin()` with real SteamID or role checks.
-3. **Real Spawning**: Connect `spawnNpc()` and `spawnCreature()` to SkyrimPlatform / Papyrus.
-4. **Persistence**: Events are saved to `director-events.json` automatically.
+DirectorAI.psc — Contains all game-world functions (spawning, AI, weather, quests, etc.). papyrus-integration.ts — Helpers for calling Papyrus from TypeScript.
 
-## Recent Updates (Production-Ready Features)
-- Real FormIDs for common spawns (Dragon, Bandit, Soldiers, Giant, etc.)
-- SQLite persistence for events
-- Rate limiting on admin actions
-- Enhanced CSS animations and Skyrim-themed polish in React UI (hover effects, fade-ins)
+UI Layer (ui/react-dashboard/)
 
-## Recommended Next Steps
-- Implement region-scoped events (filter by player location).
-- Create custom Papyrus scripts (see `papyrus-integration.ts`).
-- Add visual polish to React UI (icons, animations via CSS/Framer Motion).
+React + Redux single-page application. Dashboard.tsx — Main dashboard with all panels. Redux slice for live state management. App.css — Skyrim-themed styling. Supporting components: SpawnMenuModal, Minimap, QuestEditor, etc.
 
-See `src/papyrus-integration.ts` for deeper game integration.
+How It Works (In-Depth Mechanics)
+
+Activation Admin presses Insert → Client opens CEF browser with React UI. Command Flow UI action → CEF message → index.ts → emitServerEvent → Server processes → Papyrus calls → Broadcast back → UI updates live. Key Systems Events: Create, pause, end with timers and persistence. Spawning: FormID-based with position, AI, and region scoping. World Controls: Time, weather, multipliers with real Papyrus effects. Player Management: Live list with interaction tools. Persistence: SQLite for state across restarts. Security: Rate limiting and admin-only access.
+
+Detailed Installation Server Side
+
+Copy src/server-hooks.ts and director-config.json to your SkyMP server scripts. Edit director-config.json with your SteamIDs. Restart the server.
+
+UI Dashboard
+
+cd ui/react-dashboard npm install && npm run build Copy build/ to Data/Platform/UI/director/
+
+Client Plugin
+
+Build root project (npm run build) Place compiled plugin in SkyMP client plugins.
+
+Papyrus
+
+Compile papyrus/DirectorAI.psc in Creation Kit. Attach to a quest that starts on game load.
+
+Configuration (director-config.json) See the file for all options (admins, limits, features, security, etc.). In-Game Usage
+
+Press Insert as admin. Use panels for events, spawning, world control, and player management. All changes are live and synchronized.
+
+Troubleshooting
+
+Dashboard not loading? Check CEF path in index.ts. Spawns failing? Verify FormIDs and Papyrus quest. Admin commands ignored? Check SteamID in config.
+
+Architecture Benefits
+
+Modular and extensible. Live synchronization. Full SkyMP compatibility.
